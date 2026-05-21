@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>최우영고기야 발주 리스트</title>
+
+<link rel="icon" type="image/png" href="./icon-v6.png?v=6">
+<link rel="shortcut icon" type="image/png" href="./icon-v6.png?v=6">
+
+<link rel="apple-touch-icon"
+      sizes="180x180"
+      href="./icon-v6.png?v=6">
+
+<link rel="manifest" href="./manifest.json?v=6">
+
+<meta name="apple-mobile-web-app-title" content="최우영고기야">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+  :root {
+    --bg:#0f1117; --surface:#1a1d27; --card:#20232f; --border:#2e3245;
+    --green:#4ade80; --red:#f87171; --yellow:#fbbf24;
+    --text:#e8eaf0; --muted:#8b90a8; --kakao:#FEE500;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);
+    min-height:100vh;padding:24px 16px 100px;max-width:520px;margin:0 auto;}
+
+  /* ── 헤더 ── */
+  header{text-align:center;margin-bottom:28px;}
+  .brand-ko{
+    font-size:30px;font-weight:900;letter-spacing:-1px;
+    background:linear-gradient(90deg,#f87171,#fbbf24);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    background-clip:text;margin-bottom:6px;
+  }
+  .header-divider{width:40px;height:2px;
+    background:linear-gradient(90deg,#f87171,#fbbf24);
+    margin:0 auto 12px;}
+  .badge{display:inline-block;background:var(--border);border-radius:20px;
+    padding:4px 14px;font-size:11px;color:var(--muted);letter-spacing:2px;
+    text-transform:uppercase;margin-bottom:8px;}
+  h1{font-size:20px;font-weight:900;letter-spacing:-0.5px;}
+  h1 span{color:var(--green);}
+  .date{margin-top:4px;font-size:13px;color:var(--muted);}
+
+  /* ── 섹션 ── */
+  .section{margin-bottom:24px;}
+  .sec-hd{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+  .sec-icon{width:32px;height:32px;border-radius:9px;
+    display:flex;align-items:center;justify-content:center;font-size:16px;}
+  .sec-icon.v{background:rgba(74,222,128,.15);}
+  .sec-icon.m{background:rgba(248,113,113,.15);}
+  .sec-title{font-size:15px;font-weight:700;}
+  .sec-title.v{color:var(--green);}
+  .sec-title.m{color:var(--red);}
+  .sec-cnt{margin-left:auto;font-size:11px;color:var(--muted);
+    background:var(--border);padding:2px 8px;border-radius:10px;}
+
+  /* ── 테이블 ── */
+  table{width:100%;border-collapse:collapse;}
+  thead th{font-size:11px;color:var(--muted);padding:6px 10px;
+    text-align:left;letter-spacing:1px;border-bottom:1px solid var(--border);}
+  thead th.r{text-align:right;}
+  thead th.c{text-align:center;}
+  tr.row{border-bottom:1px solid var(--border);}
+  tr.row td{padding:9px 10px;vertical-align:middle;}
+  tr.row.fv{background:rgba(74,222,128,.05);}
+  tr.row.fm{background:rgba(248,113,113,.05);}
+  .nm{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:500;}
+  .nm.sm{font-size:13px;}
+  .emo{font-size:17px;width:22px;text-align:center;}
+  .qw{display:flex;align-items:center;justify-content:flex-end;gap:5px;}
+  .qc{display:flex;align-items:center;justify-content:center;}
+  .qbtn{width:28px;height:28px;border-radius:7px;border:1px solid var(--border);
+    background:var(--surface);color:var(--text);font-size:16px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    user-select:none;-webkit-user-select:none;flex-shrink:0;}
+  .qbtn:active{background:var(--border);}
+  .qin{height:32px;background:var(--surface);border:1px solid var(--border);
+    border-radius:7px;color:var(--text);font-size:15px;font-weight:700;
+    font-family:'Noto Sans KR',sans-serif;text-align:center;outline:none;
+    transition:border-color .2s;}
+  .qin:focus{border-color:var(--yellow);}
+  .qin.gv{color:var(--green);}
+  .qin.gm{color:var(--red);}
+
+  /* ── 고기 컬럼 라벨 ── */
+  .col-lbl-row{display:flex;gap:8px;margin-bottom:10px;align-items:center;}
+  .col-lbl-hint{font-size:12px;color:var(--muted);flex-shrink:0;}
+  .col-lbl-in{flex:1;height:32px;background:var(--surface);
+    border:1px solid var(--border);border-radius:7px;color:var(--text);
+    font-size:12px;font-family:'Noto Sans KR',sans-serif;
+    padding:0 10px;outline:none;text-align:center;transition:border-color .2s;}
+  .col-lbl-in:focus{border-color:var(--yellow);}
+
+  /* ── 직접 추가 ── */
+  .add-row{display:flex;gap:8px;margin-top:10px;}
+  .cin{flex:1;height:38px;background:var(--surface);
+    border:1px dashed var(--border);border-radius:9px;color:var(--text);
+    font-size:13px;font-family:'Noto Sans KR',sans-serif;
+    padding:0 12px;outline:none;transition:border-color .2s;}
+  .cin:focus{border-color:var(--yellow);border-style:solid;}
+  .cin::placeholder{color:var(--muted);}
+  .abtn{height:38px;padding:0 14px;background:var(--border);border:none;
+    border-radius:9px;color:var(--text);font-size:13px;font-weight:500;
+    font-family:'Noto Sans KR',sans-serif;cursor:pointer;white-space:nowrap;}
+  .abtn:active{background:#3e4260;}
+  .del{background:none;border:none;color:var(--muted);font-size:13px;
+    cursor:pointer;padding:0 2px;opacity:.4;}
+  .del:active{opacity:1;color:var(--red);}
+
+  .divider{height:1px;background:var(--border);margin:24px 0;}
+  .mlabel{font-size:13px;color:var(--muted);margin-bottom:8px;}
+  .mtxt{width:100%;min-height:68px;background:var(--card);
+    border:1px solid var(--border);border-radius:12px;color:var(--text);
+    font-size:13px;font-family:'Noto Sans KR',sans-serif;
+    padding:12px 14px;outline:none;resize:none;margin-bottom:20px;
+    transition:border-color .2s;}
+  .mtxt:focus{border-color:var(--yellow);}
+  .mtxt::placeholder{color:var(--muted);}
+
+  .plabel{font-size:11px;letter-spacing:1px;color:var(--muted);
+    text-transform:uppercase;margin-bottom:8px;}
+  .pbox{background:var(--surface);border:1px solid var(--border);
+    border-radius:14px;padding:16px;margin-bottom:20px;min-height:80px;}
+  .ptxt{font-size:13px;line-height:1.8;white-space:pre-wrap;word-break:break-all;}
+  .pempty{font-size:13px;color:var(--muted);text-align:center;padding:16px 0;}
+
+  .kbtn{width:100%;height:52px;background:var(--kakao);border:none;
+    border-radius:14px;color:#191600;font-size:16px;font-weight:700;
+    font-family:'Noto Sans KR',sans-serif;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    margin-bottom:10px;transition:background .2s,transform .1s;}
+  .kbtn:active{background:#E6CF00;transform:scale(.98);}
+  .cbtn{width:100%;height:42px;background:var(--card);
+    border:1px solid var(--border);border-radius:12px;color:var(--muted);
+    font-size:14px;font-family:'Noto Sans KR',sans-serif;
+    cursor:pointer;margin-bottom:10px;}
+  .cbtn:active{background:var(--border);color:var(--text);}
+  .rbtn{width:100%;height:38px;background:transparent;
+    border:1px dashed var(--border);border-radius:12px;color:var(--muted);
+    font-size:13px;font-family:'Noto Sans KR',sans-serif;cursor:pointer;}
+  .rbtn:active{color:var(--red);}
+
+  .toast{position:fixed;bottom:28px;left:50%;
+    transform:translateX(-50%) translateY(60px);
+    background:#fff;color:#111;font-size:13px;font-weight:500;
+    padding:10px 20px;border-radius:20px;
+    box-shadow:0 4px 20px rgba(0,0,0,.4);
+    transition:transform .3s;z-index:999;white-space:nowrap;}
+  .toast.show{transform:translateX(-50%) translateY(0);}
+</style>
+<!-- 카카오 SDK -->
+<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" integrity="sha384-TiCUE00h649CAMonG018J2ujOgDKW/kVWlChEuu4jK2vxfAAD0eZxzCKakxg55G4" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<header>
+  <div class="brand-ko">최우영고기야</div>
+  <div class="header-divider"></div>
+  <div class="badge">발주 관리</div>
+  <h1>오늘의 <span>발주 리스트</span></h1>
+  <div class="date" id="dateTag"></div>
+</header>
+
+<!-- 야채 -->
+<div class="section">
+  <div class="sec-hd">
+    <div class="sec-icon v">🥬</div>
+    <span class="sec-title v">야채 리스트</span>
+    <span class="sec-cnt" id="vegCnt">0개 입력</span>
+  </div>
+  <table>
+    <thead><tr><th>품목</th><th class="r" style="padding-right:12px;">수량</th></tr></thead>
+    <tbody id="vegBody"></tbody>
+  </table>
+  <div class="add-row">
+    <input class="cin" id="vegCin" placeholder="품목 직접 추가..." />
+    <button class="abtn" onclick="addVeg()">+ 추가</button>
+  </div>
+</div>
+
+<!-- 고기 -->
+<div class="section">
+  <div class="sec-hd">
+    <div class="sec-icon m">🥩</div>
+    <span class="sec-title m">고기 리스트</span>
+    <span class="sec-cnt" id="meatCnt">0개 입력</span>
+  </div>
+  <div class="col-lbl-row">
+    <span class="col-lbl-hint">① 라벨:</span>
+    <input class="col-lbl-in" id="c1lbl" value="수량" />
+    <span class="col-lbl-hint">② 라벨:</span>
+    <input class="col-lbl-in" id="c2lbl" value="단위" />
+  </div>
+  <table>
+    <thead><tr>
+      <th>품목</th>
+      <th class="c" id="c1h" style="width:86px;">① 수량</th>
+      <th class="c" id="c2h" style="width:86px;">② 단위</th>
+    </tr></thead>
+    <tbody id="meatBody"></tbody>
+  </table>
+  <div class="add-row">
+    <input class="cin" id="meatCin" placeholder="고기 직접 추가..." />
+    <button class="abtn" onclick="addMeat()">+ 추가</button>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="mlabel">📝 메모 (선택)</div>
+<textarea class="mtxt" id="memo" placeholder="특이사항, 요청사항 등..."></textarea>
+
+<div class="plabel">📋 메시지 미리보기</div>
+<div class="pbox"><div id="prev" class="pempty">수량을 입력하면 여기에 메시지가 표시됩니다.</div></div>
+
+<button class="kbtn" onclick="sendKakao()">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="#191600">
+    <path d="M12 3C6.477 3 2 6.477 2 10.8c0 2.7 1.557 5.084 3.938 6.545L4.8 21l4.433-2.22A11.38 11.38 0 0012 19c5.523 0 10-3.477 10-7.8S17.523 3 12 3z"/>
+  </svg>
+  카카오톡으로 전송
+</button>
+<button class="cbtn" onclick="copyMsg()">📋 텍스트 복사</button>
+<button class="rbtn" onclick="resetAll()">↺ 전체 초기화</button>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const VEG_DEFAULT = [
+  {name:'무우',emoji:'⬜'},{name:'양파',emoji:'🧅'},{name:'대파',emoji:'🌿'},
+  {name:'청양고추',emoji:'🌶️'},{name:'오이고추',emoji:'🥒'},{name:'알배추',emoji:'🥬'},
+  {name:'배',emoji:'🍐'},{name:'상추',emoji:'🥗'},{name:'깻잎',emoji:'🌿'},
+  {name:'계란',emoji:'🥚'},{name:'두부',emoji:'⬜'},{name:'적근대',emoji:'🌱'},
+  {name:'깐마늘',emoji:'🧄'},{name:'애호박',emoji:'🥒'},{name:'알마늘',emoji:'🧄'},
+  {name:'산고추',emoji:'🌶️'},{name:'버터',emoji:'🧈'},{name:'사과주스',emoji:'🧃'},
+  {name:'참숯',emoji:'🪨'},{name:'메밀 김가루',emoji:'🌾'},
+];
+const MEAT_DEFAULT = [
+  {name:'삼겹살',emoji:'🥓'},{name:'양념 삼겹살',emoji:'🥓'},
+  {name:'갈비살',emoji:'🥩'},{name:'양념 갈비살',emoji:'🥩'},
+  {name:'앞다리 전각',emoji:'🍖'},
+];
+
+function freshVeg()  { return VEG_DEFAULT.map(v=>({...v,qty:0,custom:false})); }
+function freshMeat() { return MEAT_DEFAULT.map(m=>({...m,q1:0,q2:0,custom:false})); }
+
+let veg  = freshVeg();
+let meat = freshMeat();
+
+// 날짜
+(()=>{
+  const d=new Date(), days=['일','월','화','수','목','금','토'];
+  document.getElementById('dateTag').textContent =
+    `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일 (${days[d.getDay()]})`;
+})();
+
+// 컬럼 라벨
+document.getElementById('c1lbl').addEventListener('input',()=>{
+  document.getElementById('c1h').textContent=`① ${document.getElementById('c1lbl').value||'수량'}`;
+  buildPreview();
+});
+document.getElementById('c2lbl').addEventListener('input',()=>{
+  document.getElementById('c2h').textContent=`② ${document.getElementById('c2lbl').value||'단위'}`;
+  buildPreview();
+});
+
+// ── 야채 렌더 ──
+function renderVeg() {
+  const old = document.getElementById('vegBody');
+  const tb  = old.cloneNode(false);
+  old.parentNode.replaceChild(tb, old);
+
+  veg.forEach((item, i) => {
+    const tr = document.createElement('tr');
+    tr.className = 'row' + (item.qty > 0 ? ' fv' : '');
+
+    const td1 = document.createElement('td');
+    const nm  = document.createElement('div');
+    nm.className = 'nm';
+    nm.innerHTML = `<span class="emo">${item.emoji}</span>${item.name}`;
+    if (item.custom) {
+      const d = document.createElement('button');
+      d.className='del'; d.textContent='✕';
+      d.onclick=()=>{ veg.splice(i,1); renderVeg(); };
+      nm.appendChild(d);
+    }
+    td1.appendChild(nm);
+
+    const td2 = document.createElement('td');
+    const qw  = document.createElement('div');
+    qw.className = 'qw';
+
+    const bm = document.createElement('button');
+    bm.className='qbtn'; bm.textContent='−';
+    bm.onclick=()=>{ veg[i].qty=Math.max(0,veg[i].qty-1); renderVeg(); };
+
+    const inp = document.createElement('input');
+    inp.type='number'; inp.min='0';
+    inp.className='qin'+(item.qty>0?' gv':'');
+    inp.style.width='54px'; inp.placeholder='0';
+    inp.value = item.qty > 0 ? item.qty : '';
+    inp.addEventListener('input',()=>{
+      const n=parseFloat(inp.value);
+      veg[i].qty=(isNaN(n)||n<0)?0:n;
+      inp.className='qin'+(veg[i].qty>0?' gv':'');
+      updateCounts(); buildPreview();
+    });
+
+    const bp = document.createElement('button');
+    bp.className='qbtn'; bp.textContent='+';
+    bp.onclick=()=>{ veg[i].qty+=1; renderVeg(); };
+
+    qw.append(bm, inp, bp);
+    td2.appendChild(qw);
+    tr.append(td1, td2);
+    tb.appendChild(tr);
+  });
+  updateCounts(); buildPreview();
+}
+
+function addVeg(){
+  const inp=document.getElementById('vegCin');
+  const name=inp.value.trim(); if(!name) return;
+  veg.push({name,emoji:'🌿',qty:0,custom:true});
+  inp.value=''; renderVeg();
+}
+document.getElementById('vegCin').addEventListener('keydown',e=>{ if(e.key==='Enter') addVeg(); });
+
+// ── 고기 렌더 ──
+function renderMeat() {
+  const old = document.getElementById('meatBody');
+  const tb  = old.cloneNode(false);
+  old.parentNode.replaceChild(tb, old);
+
+  meat.forEach((item, i) => {
+    const filled = item.q1>0 || item.q2>0;
+    const tr = document.createElement('tr');
+    tr.className = 'row' + (filled ? ' fm' : '');
+
+    const td0 = document.createElement('td');
+    const nm  = document.createElement('div');
+    nm.className='nm sm';
+    nm.innerHTML=`<span class="emo">${item.emoji}</span>${item.name}`;
+    if(item.custom){
+      const d=document.createElement('button');
+      d.className='del'; d.textContent='✕';
+      d.onclick=()=>{ meat.splice(i,1); renderMeat(); };
+      nm.appendChild(d);
+    }
+    td0.appendChild(nm);
+
+    const mkTd=(qKey)=>{
+      const td=document.createElement('td');
+      const inp=document.createElement('input');
+      inp.type='number'; inp.min='0'; inp.placeholder='0';
+      inp.className='qin'+(item[qKey]>0?' gm':'');
+      inp.style.width='68px';
+      inp.value = item[qKey]>0 ? item[qKey] : '';
+      inp.addEventListener('input',()=>{
+        const n=parseFloat(inp.value);
+        meat[i][qKey]=(isNaN(n)||n<0)?0:n;
+        inp.className='qin'+(meat[i][qKey]>0?' gm':'');
+        updateCounts(); buildPreview();
+      });
+      const w=document.createElement('div'); w.className='qc'; w.appendChild(inp);
+      td.appendChild(w); return td;
+    };
+
+    tr.append(td0, mkTd('q1'), mkTd('q2'));
+    tb.appendChild(tr);
+  });
+  updateCounts(); buildPreview();
+}
+
+function addMeat(){
+  const inp=document.getElementById('meatCin');
+  const name=inp.value.trim(); if(!name) return;
+  meat.push({name,emoji:'🥩',q1:0,q2:0,custom:true});
+  inp.value=''; renderMeat();
+}
+document.getElementById('meatCin').addEventListener('keydown',e=>{ if(e.key==='Enter') addMeat(); });
+
+// ── 카운트 ──
+function updateCounts(){
+  document.getElementById('vegCnt').textContent  = `${veg.filter(i=>i.qty>0).length}개 입력`;
+  document.getElementById('meatCnt').textContent = `${meat.filter(i=>i.q1>0||i.q2>0).length}개 입력`;
+}
+
+// ── 메시지 빌드 ──
+function buildMsg(){
+  const d=new Date(), days=['일','월','화','수','목','금','토'];
+  const c1=document.getElementById('c1lbl').value||'수량';
+  const c2=document.getElementById('c2lbl').value||'단위';
+  const vf=veg.filter(i=>i.qty>0);
+  const mf=meat.filter(i=>i.q1>0||i.q2>0);
+  if(!vf.length&&!mf.length) return null;
+
+  let msg=`🏪 최우영고기야 발주 리스트\n📅 ${d.getMonth()+1}/${d.getDate()}(${days[d.getDay()]})\n━━━━━━━━━━━━━━`;
+  if(vf.length){ msg+='\n\n🥬 야채\n'; vf.forEach(i=>{ msg+=`  ${i.emoji} ${i.name}: ${i.qty}\n`; }); }
+  if(mf.length){
+    msg+='\n🥩 고기\n';
+    mf.forEach(i=>{
+      let line=`  ${i.emoji} ${i.name}:`;
+      if(i.q1>0) line+=`  ${c1} ${i.q1}`;
+      if(i.q2>0) line+=`  ${c2} ${i.q2}`;
+      msg+=line+'\n';
+    });
+  }
+  const memo=document.getElementById('memo').value.trim();
+  if(memo) msg+=`\n📝 메모\n${memo}\n`;
+  return msg+'━━━━━━━━━━━━━━';
+}
+
+function buildPreview(){
+  const msg=buildMsg();
+  const el=document.getElementById('prev');
+  if(!msg){ el.className='pempty'; el.textContent='수량을 입력하면 여기에 메시지가 표시됩니다.'; }
+  else    { el.className='ptxt';   el.textContent=msg; }
+}
+document.getElementById('memo').addEventListener('input',buildPreview);
+
+// ── 카카오 SDK 초기화 ──
+// ※ 아래 앱 키를 카카오 개발자센터(developers.kakao.com)에서 발급받은 JS 키로 교체하세요
+const KAKAO_APP_KEY = 'YOUR_KAKAO_JS_KEY';
+
+function initKakaoSDK(){
+  try {
+    if(KAKAO_APP_KEY !== 'YOUR_KAKAO_JS_KEY' && !Kakao.isInitialized()){
+      Kakao.init(KAKAO_APP_KEY);
+    }
+  } catch(e){}
+}
+
+// ── 전송 ──
+async function sendKakao(){
+  const msg=buildMsg();
+  if(!msg){ showToast('⚠️ 수량을 먼저 입력해주세요'); return; }
+
+  // ① 파일로 공유 (삼성 브라우저 등 파일 공유 지원 환경)
+  try {
+    const blob = new Blob([msg], {type:'text/plain'});
+    const file = new File([blob], '발주리스트.txt', {type:'text/plain'});
+    if(navigator.canShare && navigator.canShare({files:[file]})){
+      await navigator.share({files:[file], title:'발주 리스트'});
+      return;
+    }
+  } catch(e){}
+
+  // ② 텍스트 공유 (일반 Web Share)
+  try {
+    if(navigator.share){
+      await navigator.share({title:'발주 리스트', text:msg});
+      return;
+    }
+  } catch(e){}
+
+  // ③ 클립보드 복사 fallback
+  try {
+    await navigator.clipboard.writeText(msg);
+  } catch(e){ fbCopy(msg); }
+  showToast('📋 복사 완료! 카카오톡에 붙여넣어 주세요');
+}
+
+function copyMsg(){
+  const msg=buildMsg();
+  if(!msg){ showToast('⚠️ 수량을 먼저 입력해주세요'); return; }
+  if(navigator.clipboard) navigator.clipboard.writeText(msg).then(()=>showToast('📋 복사 완료!')).catch(()=>{ fbCopy(msg); showToast('📋 복사 완료!'); });
+  else { fbCopy(msg); showToast('📋 복사 완료!'); }
+}
+
+function fbCopy(text){
+  const el=document.createElement('textarea');
+  el.value=text; document.body.appendChild(el); el.select();
+  document.execCommand('copy'); document.body.removeChild(el);
+}
+
+// ── 전체 초기화 ──
+function resetAll(){
+  if(!confirm('전체 수량을 초기화할까요?')) return;
+  veg  = freshVeg();
+  meat = freshMeat();
+  document.getElementById('memo').value='';
+  renderVeg();
+  renderMeat();
+  showToast('↺ 초기화 완료');
+}
+
+// ── 토스트 ──
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2600);
+}
+
+// 초기 렌더
+initKakaoSDK();
+renderVeg();
+renderMeat();
+</script>
+</body>
+</html>
